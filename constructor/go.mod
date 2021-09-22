@@ -4,7 +4,8 @@ go 1.16
 
 require (
 	github.com/go-redis/redis/v8 v8.11.3 // indirect
-	github.com/jackc/pgx v3.6.2+incompatible // indirect
+	github.com/jackc/pgx/v4 v4.13.0 // indirect
+	github.com/jackc/puddle v1.1.4 // indirect
 	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
