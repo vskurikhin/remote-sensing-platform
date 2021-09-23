@@ -20,7 +20,6 @@ type Server struct {
 
 // New инициализирует сервер для ответа на сетевые запросы HTTP.
 func New(cfg *config.Config) *Server {
-
 	c := sa.Config{
 		Addr:             cfg.Server.Host + `:` + cfg.Server.Port,
 		Compress:         true,
@@ -42,7 +41,6 @@ func (s *Server) UseBefore(fns sa.Middleware) *sa.Router {
 }
 
 func (s *Server) StaticCustom() *sa.Path {
-
 	return s.Server.StaticCustom("/", &sa.StaticFS{
 		Root:               "web/public",
 		GenerateIndexPages: true,
@@ -94,7 +92,6 @@ func gracefulClose(poolRo *pgxpool.Pool, poolRw *pgxpool.Pool) {
 }
 
 func openDBRw(cfg *config.Config) *pgxpool.Pool {
-
 	dbCFG := cfg.DataBase
 	dsn := fmt.Sprintf(`postgres://%s:%s@%s:%d/%s`, dbCFG.Username, dbCFG.Password, dbCFG.HostRw, dbCFG.PortRw, dbCFG.DBName)
 	con, err := pgxpool.ParseConfig(dsn)
@@ -128,7 +125,6 @@ func openDBRw(cfg *config.Config) *pgxpool.Pool {
 }
 
 func openDBRo(cfg *config.Config) *pgxpool.Pool {
-
 	dbCFG := cfg.DataBase
 	dsn := fmt.Sprintf(`postgres://%s:%s@%s:%d/%s`, dbCFG.Username, dbCFG.Password, dbCFG.HostRo, dbCFG.PortRo, dbCFG.DBName)
 	con, err := pgxpool.ParseConfig(dsn)
@@ -162,7 +158,6 @@ func openDBRo(cfg *config.Config) *pgxpool.Pool {
 }
 
 func versionDB(db *pgxpool.Pool) {
-
 	if logger.DebugEnabled() {
 		var version string
 		err := db.QueryRow(context.Background(), "SELECT VERSION()").Scan(&version)
@@ -170,6 +165,6 @@ func versionDB(db *pgxpool.Pool) {
 		if err != nil {
 			panic(err.Error()) // proper error handling instead of panic in your app
 		}
-		fmt.Println(version)
+		logger.Debug(version)
 	}
 }
