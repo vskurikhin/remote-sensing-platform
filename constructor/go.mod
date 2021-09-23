@@ -11,5 +11,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/savsgio/atreugo/v11 v11.8.3 // indirect
 	github.com/savsgio/go-logger/v2 v2.1.2 // indirect
+	github.com/valyala/fasthttp v1.30.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

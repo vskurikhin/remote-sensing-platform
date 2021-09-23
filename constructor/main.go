@@ -7,6 +7,7 @@ import (
 	"github.com/savsgio/go-logger/v2"
 	"github.com/vskurikhin/remote-sensing-platform/constructor/config"
 	"github.com/vskurikhin/remote-sensing-platform/constructor/server"
+	"github.com/vskurikhin/remote-sensing-platform/constructor/server/handlers"
 )
 
 func main() {
@@ -27,11 +28,12 @@ func main() {
 		fmt.Println(environ.String())
 		logger.SetLevel(logger.DEBUG)
 	}
-	if environ != nil {
-		logger.Printf("%s", environ.String())
-	}
 	// Создать инстанс сервера
 	s := server.New(environ)
+	// Обработчики запросов.
+	h := handlers.Handlers{Server: s}
+	// Зарегистрировать маршруты для поиска пользователей.
+	s.GET("/api/admin/{userId}/polls/{pollId}/constructor", h.GetPollConstructorPageData)
 	// Run
 	if err := s.ListenAndServe(); err != nil {
 		panic(err)
