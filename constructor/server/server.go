@@ -8,11 +8,13 @@ import (
 	sa "github.com/savsgio/atreugo/v11"
 	"github.com/savsgio/go-logger/v2"
 	"github.com/vskurikhin/remote-sensing-platform/constructor/config"
+	"github.com/vskurikhin/remote-sensing-platform/constructor/domain"
 	"os"
 )
 
 // Server определяет параметры для запуска HTTP-сервера.
 type Server struct {
+	Dao    *domain.DAO
 	PoolRo *pgxpool.Pool
 	PoolRw *pgxpool.Pool
 	Server *sa.Atreugo
@@ -32,6 +34,7 @@ func New(cfg *config.Config) *Server {
 	versionDB(poolRw)
 
 	return &Server{
+		Dao:    domain.New(poolRo, poolRw),
 		Server: sa.New(c),
 	}
 }

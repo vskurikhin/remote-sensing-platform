@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"encoding/json"
 	"github.com/savsgio/go-logger/v2"
 )
@@ -41,4 +42,64 @@ func (e *EPollSettings) Marshal() []byte {
 		return nil
 	}
 	return user
+}
+
+func (u *ePollSettings) FindById(id int64) (*EPollSettings, error) {
+	return u.findById(id)
+}
+
+const SELECT_POLL_SETTINGS = `
+	SELECT ps.id,
+		   ps.button_next_disabled,
+		   ps.button_prev_enabled,
+		   ps.button_result_enabled,
+		   ps.button_text,
+		   ps.design_id,
+		   ps.horizontal_scroll,
+		   ps.language,
+		   ps.notification_frequency,
+		   ps.progress_bar_type,
+		   ps.question_align_type,
+		   ps.question_background_enabled,
+		   ps.question_numbers_enabled,
+		   ps.question_required_highlight,
+		   ps.required_params,
+		   ps.session_number_show,
+		   ps.session_restore,
+		   ps.session_time,
+		   ps.shuffle_enabled,
+		   ps.single_page,
+		   ps.welcome_screen_footer
+	  FROM poll_settings ps
+	 WHERE ps.id = $1`
+
+func (u *ePollSettings) findById(id int64) (*EPollSettings, error) {
+	var e EPollSettings
+	err := u.poolRo.
+		QueryRow(context.Background(), SELECT_POLL_SETTINGS, id).
+		Scan(&e.Id,
+			&e.ButtonNextDisabled,
+			&e.ButtonPrevEnabled,
+			&e.ButtonResultEnabled,
+			&e.ButtonText,
+			&e.DesignId,
+			&e.HorizontalScroll,
+			&e.Language,
+			&e.NotificationFrequency,
+			&e.ProgressBarType,
+			&e.QuestionAlignType,
+			&e.QuestionBackgroundEnabled,
+			&e.QuestionNumbersEnabled,
+			&e.QuestionRequiredHighlight,
+			&e.RequiredParams,
+			&e.SessionNumberShow,
+			&e.SessionRestore,
+			&e.SessionTime,
+			&e.ShuffleEnabled,
+			&e.SinglePage,
+			&e.WelcomeScreenFooter)
+	if err != nil {
+		return nil, err
+	}
+	return &e, nil
 }
