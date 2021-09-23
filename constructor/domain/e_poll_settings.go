@@ -10,7 +10,7 @@ type EPollSettings struct {
 	Id                        int64    `json:"id"`
 	DesignId                  int64    `json:"designId"`
 	ProgressBarType           string   `json:"progressBarType"`
-	QuestionAlignType         string   `json:"QuestionAlignType"`
+	QuestionAlignType         string   `json:"questionAlignType"`
 	NotificationFrequency     string   `json:"notificationFrequency"`
 	HorizontalScroll          bool     `json:"horizontalScroll"`
 	WelcomeScreenFooter       bool     `json:"welcomeScreenFooter"`
@@ -35,20 +35,19 @@ func (e *EPollSettings) String() string {
 }
 
 func (e *EPollSettings) Marshal() []byte {
-
-	user, err := json.Marshal(*e)
+	result, err := json.Marshal(*e)
 	if err != nil {
 		logger.Error(err)
 		return nil
 	}
-	return user
+	return result
 }
 
-func (u *ePollSettings) FindById(id int64) (*EPollSettings, error) {
-	return u.findById(id)
+func (d *ePollSettings) FindById(id int64) (*EPollSettings, error) {
+	return d.findById(id)
 }
 
-const SELECT_POLL_SETTINGS = `
+const SELECT_POLL_SETTINGS_BY_ID = `
 	SELECT ps.id,
 		   ps.button_next_disabled,
 		   ps.button_prev_enabled,
@@ -73,10 +72,10 @@ const SELECT_POLL_SETTINGS = `
 	  FROM poll_settings ps
 	 WHERE ps.id = $1`
 
-func (u *ePollSettings) findById(id int64) (*EPollSettings, error) {
+func (d *ePollSettings) findById(id int64) (*EPollSettings, error) {
 	var e EPollSettings
-	err := u.poolRo.
-		QueryRow(context.Background(), SELECT_POLL_SETTINGS, id).
+	err := d.poolRo.
+		QueryRow(context.Background(), SELECT_POLL_SETTINGS_BY_ID, id).
 		Scan(&e.Id,
 			&e.ButtonNextDisabled,
 			&e.ButtonPrevEnabled,
