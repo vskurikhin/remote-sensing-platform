@@ -7,6 +7,7 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 	sa "github.com/savsgio/atreugo/v11"
 	"github.com/savsgio/go-logger/v2"
+	"github.com/vskurikhin/remote-sensing-platform/constructor/cache"
 	"github.com/vskurikhin/remote-sensing-platform/constructor/config"
 	"github.com/vskurikhin/remote-sensing-platform/constructor/domain"
 	"os"
@@ -14,6 +15,7 @@ import (
 
 // Server определяет параметры для запуска HTTP-сервера.
 type Server struct {
+	Cache  *cache.Redis
 	Dao    *domain.DAO
 	PoolRo *pgxpool.Pool
 	PoolRw *pgxpool.Pool
@@ -32,8 +34,10 @@ func New(cfg *config.Config) *Server {
 	poolRw := openDBRw(cfg)
 	go gracefulClose(poolRo, poolRw)
 	versionDB(poolRw)
+	redis := cache.CreateRedisCacheClient(cfg)
 
 	return &Server{
+		Cache:  redis,
 		Dao:    domain.New(poolRo, poolRw),
 		Server: sa.New(c),
 	}
