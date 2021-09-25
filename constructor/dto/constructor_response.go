@@ -7,21 +7,24 @@ import (
 )
 
 type ConstructorResponse struct {
-	Poll         *domain.EPoll          `json:"poll"`
-	Settings     *PollDesignAndSettings `json:"settings"`
-	PollChannels []domain.EPollChannel  `json:"pollChannels"`
+	Poll          *domain.EPoll          `json:"poll"`
+	Settings      *PollDesignAndSettings `json:"settings"`
+	PollChannels  []domain.EPollChannel  `json:"pollChannels"`
+	MainPollItems []domain.FScreenMain   `json:"main_poll_items"`
 }
 
 func NewConstructorResponse(
 	poll *domain.EPoll,
 	design *domain.EPollDesign,
 	settings *domain.EPollSettings,
-	channels []domain.EPollChannel) *ConstructorResponse {
+	channels []domain.EPollChannel,
+	items []domain.FScreenMain) *ConstructorResponse {
 
 	return &ConstructorResponse{
-		Poll:         poll,
-		Settings:     NewPollDesignAndSettings(design, settings),
-		PollChannels: channels,
+		Poll:          poll,
+		Settings:      NewPollDesignAndSettings(design, settings),
+		PollChannels:  channels,
+		MainPollItems: items,
 	}
 }
 
