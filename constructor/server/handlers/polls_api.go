@@ -24,51 +24,98 @@ func (h *Handlers) GetPollConstructorPageData(ctx *sa.RequestCtx) error {
 }
 
 func (h *Handlers) getPollConstructorPageData(ctx *sa.RequestCtx) (*dto.ConstructorResponse, error) {
+
 	pollId := fmt.Sprintf("%v", ctx.UserValue("pollId"))
 	id, err := strconv.ParseInt(pollId, 10, 64)
 	if err != nil {
 		return nil, err
 	}
+
 	poll, err := h.getEPoll(id)
 	if err != nil {
 		return nil, err
 	}
+
 	settings, err := h.getEPollSettings(id)
 	if err != nil {
 		return nil, err
 	}
+
 	design, err := h.getEPollDesign(settings.DesignId)
 	if err != nil {
 		return nil, err
 	}
+
 	channels, err := h.getAllEPollChannelsByPollIdAndDebugFalseOrderByIdAsc(id)
 	if err != nil {
 		return nil, err
 	}
-	pollItem, err := h.getAllFPollItemByPollIdAndDeletedAtIsNullOrderByIndexWithLocalIndex(id)
+
+	pollItems, err := h.getAllFPollItemByPollIdAndDeletedAtIsNullOrderByIndexWithLocalIndex(id)
 	if err != nil {
 		return nil, err
 	}
-	constructorResponse := dto.NewConstructorResponse(poll, design, settings, channels, pollItem)
+	constructorResponse := dto.NewConstructorResponse(poll, design, settings, channels, pollItems)
+
 	return constructorResponse, nil
 }
 
 func (h *Handlers) getEPoll(id int64) (*domain.EPoll, error) {
-	return h.Server.Dao.EPoll.FindById(id)
+	poll, err := h.Server.Cache.GetEPoll(id)
+	if err != nil {
+		poll, err = h.Server.Dao.EPoll.FindById(id)
+		if err != nil {
+			return nil, err
+		}
+		h.Server.Cache.PutEPoll(id, poll)
+	}
+	return poll, nil
 }
 
 func (h *Handlers) getEPollSettings(id int64) (*domain.EPollSettings, error) {
-	return h.Server.Dao.EPollSettings.FindById(id)
+	settings, err := h.Server.Cache.GetEPollSettings(id)
+	if err != nil {
+		settings, err = h.Server.Dao.EPollSettings.FindById(id)
+		if err != nil {
+			return nil, err
+		}
+		h.Server.Cache.PutEPollSettings(id, settings)
+	}
+	return settings, nil
 }
 
 func (h *Handlers) getEPollDesign(id int64) (*domain.EPollDesign, error) {
-	return h.Server.Dao.EPollDesign.FindById(id)
+	design, err := h.Server.Cache.GetEPollDesign(id)
+	if err != nil {
+		design, err = h.Server.Dao.EPollDesign.FindById(id)
+		if err != nil {
+			return nil, err
+		}
+		h.Server.Cache.PutEPollDesign(id, design)
+	}
+	return design, nil
 }
 
 func (h *Handlers) getAllEPollChannelsByPollIdAndDebugFalseOrderByIdAsc(id int64) ([]domain.EPollChannel, error) {
-	return h.Server.Dao.EPollChannel.FindAllByPollIdAndDebugFalseOrderByIdAsc(id)
+	channels, err := h.Server.Cache.GetEPollChannel(id)
+	if err != nil {
+		channels, err = h.Server.Dao.EPollChannel.FindAllByPollIdAndDebugFalseOrderByIdAsc(id)
+		if err != nil {
+			return nil, err
+		}
+		h.Server.Cache.PutEPollChannel(id, channels)
+	}
+	return channels, nil
 }
 
 func (h *Handlers) getAllFPollItemByPollIdAndDeletedAtIsNullOrderByIndexWithLocalIndex(id int64) ([]domain.FScreenMain, error) {
-	return h.Server.Dao.FPollItem.FindById(id)
+	pollItems, err := h.Server.Cache.GetArrayOfFScreenMain(id)
+	if err != nil {
+		pollItems, err := h.Server.Dao.FPollItem.FindById(id)
+		if err != nil {
+			return nil, err
+		}
+		h.Server.Cache.PutArrayOfFScreenMain(id, pollItems)
+	}
+	return pollItems, nil
 }
