@@ -10,6 +10,7 @@ type (
 		EPollChannel  *ePollChannel
 		EPollDesign   *ePollDesign
 		EPollSettings *ePollSettings
+		FPollItem     *fPollItem
 	}
 	ePoll struct {
 		poolRo *pgxpool.Pool
@@ -27,6 +28,10 @@ type (
 		poolRo *pgxpool.Pool
 		poolRw *pgxpool.Pool
 	}
+	fPollItem struct {
+		poolRo *pgxpool.Pool
+		poolRw *pgxpool.Pool
+	}
 )
 
 func New(poolRo *pgxpool.Pool, poolRw *pgxpool.Pool) *DAO {
@@ -35,5 +40,6 @@ func New(poolRo *pgxpool.Pool, poolRw *pgxpool.Pool) *DAO {
 		EPollChannel:  &ePollChannel{poolRo: poolRo, poolRw: poolRw},
 		EPollDesign:   &ePollDesign{poolRo: poolRo, poolRw: poolRw},
 		EPollSettings: &ePollSettings{poolRo: poolRo, poolRw: poolRw},
+		FPollItem:     &fPollItem{poolRo: poolRo, poolRw: poolRw},
 	}
 }

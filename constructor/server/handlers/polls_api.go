@@ -45,7 +45,11 @@ func (h *Handlers) getPollConstructorPageData(ctx *sa.RequestCtx) (*dto.Construc
 	if err != nil {
 		return nil, err
 	}
-	constructorResponse := dto.NewConstructorResponse(poll, design, settings, channels)
+	pollItem, err := h.getAllFPollItemByPollIdAndDeletedAtIsNullOrderByIndexWithLocalIndex(id)
+	if err != nil {
+		return nil, err
+	}
+	constructorResponse := dto.NewConstructorResponse(poll, design, settings, channels, pollItem)
 	return constructorResponse, nil
 }
 
@@ -63,4 +67,8 @@ func (h *Handlers) getEPollDesign(id int64) (*domain.EPollDesign, error) {
 
 func (h *Handlers) getAllEPollChannelsByPollIdAndDebugFalseOrderByIdAsc(id int64) ([]domain.EPollChannel, error) {
 	return h.Server.Dao.EPollChannel.FindAllByPollIdAndDebugFalseOrderByIdAsc(id)
+}
+
+func (h *Handlers) getAllFPollItemByPollIdAndDeletedAtIsNullOrderByIndexWithLocalIndex(id int64) ([]domain.FScreenMain, error) {
+	return h.Server.Dao.FPollItem.FindById(id)
 }
