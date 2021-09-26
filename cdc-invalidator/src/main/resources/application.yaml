@@ -1,0 +1,173 @@
+#debug: true
+#trace: true
+#server.app:
+
+# Настройки соединений с БД
+abdb:
+  datasource:
+    databasename: ${DATABASE_NAME:oprosso}
+    host: ${DATABASE_HOSTNAME:localhost}
+    port: ${DATABASE_PORT:5432}
+    username: ${DATABASE_USERNAME:replication}
+    password: ${DATABASE_PASSWORD:password}
+    table:
+      names:
+        - "public.question"
+
+app:
+  name: cap-integration
+  cap-topic: ${CAP_TOPIC:ab-cap}
+
+debezium:
+  kafka:
+    bootstrap-servers: ${DEBEZIUM_BOOTSTRAP_SERVERS:localhost:9292}
+    client-id: CI
+    key-store-location: ${DEBEZIUM_KEY_STORE:keyStore.jks}
+    key-store-password: ${DEBEZIUM_KEY_STORE_PASSWORD:changeit}
+    security-protocol: ${DEBEZIUM_SECURITY_PROTOCOL:#{null}}
+    ssl-endpoint-identification-algorithm: ""
+    trust-store-location: ${DEBEZIUM_TRUST_STORE:trustStore.jks}
+    trust-store-password: ${DEBEZIUM_TRUST_STORE_PASSWORD:changeit}
+    security-inter-broker-protocol: ${DEBEZIUM_SECURITY_INTER_BROKER_PROTOCOL:#{null}}
+    config:
+      storage:
+        partitions: 1
+        replication-factor: 1
+        topic: abdb-debezium-config-storage
+    offset:
+      flush-interval-ms: ${DEBEZIUM_FLUSH_INTERVAL_MS:500}
+      storage:
+        partitions: 1
+        replication-factor: 1
+        topic: abdb-debezium-offset-storage
+    status:
+      storage:
+        partitions: 1
+        replication-factor: 1
+        topic: abdb-debezium-status-storage
+
+logging:
+  level:
+    ROOT: INFO
+    ru:
+      sberbank:
+        ab: TRACE
+    org:
+      apache:
+        coyote:
+          http11:
+            Http11InputBuffer: INFO
+      hibernate:
+        engine:
+          transaction: INFO
+        hql:
+          internal:
+            ast:
+              ErrorTracker: INFO
+              HqlSqlWalker: INFO
+              QueryTranslatorImpl: INFO
+              util:
+                JoinProcessor: INFO
+      springframework:
+        web:
+          servlet:
+            DispatcherServlet: INFO
+            mvc:
+              method:
+                annotation:
+                  RequestMappingHandlerMapping: INFO
+
+management:
+  endpoint:
+    caches:
+      enabled: true
+    health:
+      group:
+        custom:
+          include: diskSpace,ping
+          show-details: when_authorized
+          show-components: when_authorized
+      enabled: true
+      show-details: when_authorized
+      show-components: when_authorized
+    info:
+      enabled: true
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  health:
+    db:
+      enabled: true
+    defaults:
+      enabled: false
+    ldap:
+      enabled: false
+    livenessstate:
+      enabled: true
+    ping:
+      enabled: true
+
+server:
+  address: ${SERVER_ADDRESS:0.0.0.0}
+  port: ${SERVER_PORT:8083}
+
+spring:
+  banner:
+    location: classpath:banner.txt
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  profiles:
+    active: development
+  kafka:
+    bootstrap-servers: ${BOOTSTRAP_SERVERS:kafka.dev.ab.sberbank.ru:9093}
+    client-id: ABPLATFORM
+    consumer:
+      bootstrap-servers: ${BOOTSTRAP_SERVERS:kafka.dev.ab.sberbank.ru:9093}
+      client-id: ABPLATFORM
+      group-id: group_id
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteBufferDeserializer
+      ssl:
+        protocol: SSL
+      security:
+        protocol: ${SECURITY_PROTOCOL:#{null}}
+    producer:
+      bootstrap-servers: ${BOOTSTRAP_SERVERS:kafka.dev.ab.sberbank.ru:9093}
+      client-id: ABPLATFORM
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.ByteBufferSerializer
+      ssl:
+        protocol: SSL
+      security:
+        protocol: ${SECURITY_PROTOCOL:#{null}}
+      acks: 1
+    properties:
+      security:
+        inter:
+          broker:
+            protocol: SSL
+        protocol: ${SECURITY_PROTOCOL:#{null}}
+      ssl:
+        endpoint:
+          identification:
+            algorithm: ""
+    security:
+      protocol: ${SECURITY_PROTOCOL:#{null}}
+    ssl:
+      key-password: ${KEY_PASSWORD:changeit}
+      key-store-location: file:${KEY_STORE}
+      key-store-password: ${KEY_STORE_PASSWORD:changeit}
+      trust-store-location: file:${TRUST_STORE}
+      trust-store-password: ${TRUST_STORE_PASSWORD:changeit}
+      protocol: SSL
+    template:
+      default-topic: log-0
+  liquibase:
+    enabled: false
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB

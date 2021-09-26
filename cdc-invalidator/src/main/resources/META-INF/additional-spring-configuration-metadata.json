@@ -1,0 +1,133 @@
+{
+  "properties": [
+    {
+      "name": "app.name",
+      "type": "java.lang.String",
+      "description": "Microservice application name."
+    },
+    {
+      "name": "abdb.datasource.databasename",
+      "type": "java.lang.String",
+      "description": "DataBase name for capture data changes."
+    },
+    {
+      "name": "abdb.datasource.host",
+      "type": "java.lang.String",
+      "description": "DataBase hostname where located abdb.datasource.databasename."
+    },
+    {
+      "name": "abdb.datasource.port",
+      "type": "java.lang.String",
+      "description": "DataBase port on abdb.datasource.host."
+    },
+    {
+      "name": "abdb.datasource.username",
+      "type": "java.lang.String",
+      "description": "DataBase userName."
+    },
+    {
+      "name": "abdb.datasource.password",
+      "type": "java.lang.String",
+      "description": "Password for abdb.datasource.username."
+    },
+    {
+      "name": "abdb.datasource.table.names",
+      "type": "java.lang.String",
+      "description": "List of tables for capture data changes."
+    },
+    {
+      "name": "debezium.kafka.bootstrap-servers",
+      "type": "java.lang.String",
+      "description": "Kafka bootstrap servers."
+    },
+    {
+      "name": "debezium.kafka.security-protocol",
+      "type": "java.lang.String",
+      "description": "Security protocol for kafka connection."
+    },
+    {
+      "name": "debezium.kafka.key-store-location",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.key-store-location."
+    },
+    {
+      "name": "debezium.kafka.key-store-password",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.key-store-password."
+    },
+    {
+      "name": "debezium.kafka.trust-store-location",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.trust-store-location."
+    },
+    {
+      "name": "debezium.kafka.trust-store-password",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.trust-store-password."
+    },
+    {
+      "name": "debezium.kafka.config.storage.partitions",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.config.storage.partitions."
+    },
+    {
+      "name": "debezium.kafka.config.storage.replication-factor",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.config.storage.replication-factor."
+    },
+    {
+      "name": "debezium.kafka.config.storage.topic",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.config.storage.topic."
+    },
+    {
+      "name": "debezium.kafka.offset.flush-interval-ms",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.offset.flush-interval-ms."
+    },
+    {
+      "name": "debezium.kafka.offset.storage.partitions",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.offset.storage.partitions."
+    },
+    {
+      "name": "debezium.kafka.offset.storage.replication-factor",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.offset.storage.replication-factor."
+    },
+    {
+      "name": "debezium.kafka.offset.storage.topic",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.offset.storage.topic."
+    },
+    {
+      "name": "debezium.kafka.status.storage.partitions",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.status.storage.partitions."
+    },
+    {
+      "name": "debezium.kafka.status.storage.replication-factor",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.status.storage.replication-factor."
+    },
+    {
+      "name": "debezium.kafka.status.storage.topic",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.status.storage.topic."
+    },
+    {
+      "name": "abdb.datasource.table-map.pairs",
+      "type": "java.lang.String",
+      "description": "Description for abdb.datasource.table-map.pairs."
+    },
+    {
+      "name": "app.cap-topic",
+      "type": "java.lang.String",
+      "description": "Description for app.cap-topic."
+    },
+    {
+      "name": "debezium.kafka.sasl-mechanism",
+      "type": "java.lang.String",
+      "description": "Description for debezium.kafka.sasl-mechanism."
+    }
+  ] }

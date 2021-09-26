@@ -1,0 +1,11 @@
+pluginManagement {
+    repositories {
+        maven { url "https://nexus.sigma.sbrf.ru/nexus/content/repositories/central/" }
+        maven { url "https://nexus.sigma.sbrf.ru/nexus/content/repositories/Atlassian_proxy/" }
+        maven { url "https://nexus.sigma.sbrf.ru/nexus/content/repositories/jcenter/" }
+        maven { url "https://nexus.sigma.sbrf.ru/nexus/content/repositories/gradle_plugins_proxy/" }
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'cdc-invalidator'
