@@ -1,5 +1,7 @@
 package su.svn.invalidator.cdc.listeners;
 
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.api.StatefulRedisConnection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -36,6 +38,9 @@ public class CDCListener {
 
     private final String topic;
 
+    private final RedisClient redisClient;
+    private final StatefulRedisConnection<String, String> connection;
+
     /**
      * Constructor which loads the configurations and sets a callback method 'handleEvent', which is invoked when
      * a DataBase transactional operation is performed.
@@ -53,6 +58,9 @@ public class CDCListener {
                 .notifying(this::handleEvent).build();
         this.kafkaTemplate = kafkaTemplate;
         this.topic = topic;
+        this.redisClient = RedisClient.create("redis://oprosso@localhost/0");
+        this.connection = redisClient.connect();
+        log.info("Connected to Redis");
     }
 
     /**
@@ -69,6 +77,8 @@ public class CDCListener {
     @PreDestroy
     private void stop() {
         if (this.engine != null) {
+            connection.close();
+            redisClient.shutdown();
             this.engine.stop();
         }
     }
@@ -80,6 +90,48 @@ public class CDCListener {
      */
     private void handleEvent(SourceRecord sourceRecord) {
         Struct sourceRecordValue = (Struct) sourceRecord.value();
+        Struct source = (Struct) sourceRecordValue.get("source");
+        String table = source.get("table").toString();
+        switch (table) {
+            case "screen_main":
+            case "group":
+            case "question":
+            case "question_audio":
+            case "question_card_sorting":
+            case "question_closed":
+            case "question_comparison":
+            case "question_csi":
+            case "question_first_click":
+            case "question_matrix":
+            case "question_media":
+            case "question_nps":
+            case "question_opened":
+            case "question_opinion":
+            case "question_password":
+            case "question_ranging":
+            case "question_rating":
+            case "question_semantic_differential":
+            case "question_site_test":
+            case "question_slideshow":
+            case "question_test_text":
+            case "question_tree_testing":
+                extracted(sourceRecordValue);
+        }
         log.info("handleEvent: {}", sourceRecordValue);
+    }
+
+    private void extracted(Struct sourceRecordValue) {
+        try {
+            String op = sourceRecordValue.get("op").toString();
+            Struct after = (Struct) sourceRecordValue.get("after");
+            int id = Integer.parseInt(after.get("id").toString());
+            String key = String.format("InvalidateArrayOfFScreenMain-pollItemId-%d", id);
+            String value = connection.sync().get(key);
+            connection.async().del(value);
+            connection.async().del(key);
+            log.info("value: {}", value);
+        } catch (Exception e) {
+            log.error("handleEvent: ", e);
+        }
     }
 }
