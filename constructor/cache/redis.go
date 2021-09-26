@@ -200,7 +200,8 @@ func (r *Redis) PutArrayOfFScreenMain(pollId int64, a []domain.FScreenMain) {
 	}
 	value := key
 	for _, e := range a {
-		key = keyInvalidateArrayOfFScreenMain(e.PollItem.PollId)
+		key = keyInvalidateArrayOfFScreenMain(e.PollItem.Id)
+		logger.Infof("cache.PutArrayOfFScreenMain: key %s", key)
 		err = r.Cache.Set(ctx, key, value, redis.KeepTTL).Err()
 		if err != nil {
 			logger.Errorf("cache.PutArrayOfFScreenMain: %v", err)

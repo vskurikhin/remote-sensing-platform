@@ -12,7 +12,28 @@ abdb:
     password: ${DATABASE_PASSWORD:password}
     table:
       names:
+        - "public.screen_main"
+        - "public.group"
         - "public.question"
+        - "public.question_audio"
+        - "public.question_card_sorting"
+        - "public.question_closed"
+        - "public.question_comparison"
+        - "public.question_csi"
+        - "public.question_first_click"
+        - "public.question_matrix"
+        - "public.question_media"
+        - "public.question_nps"
+        - "public.question_opened"
+        - "public.question_opinion"
+        - "public.question_password"
+        - "public.question_ranging"
+        - "public.question_rating"
+        - "public.question_semantic_differential"
+        - "public.question_site_test"
+        - "public.question_slideshow"
+        - "public.question_test_text"
+        - "public.question_tree_testing"
 
 app:
   name: cap-integration
