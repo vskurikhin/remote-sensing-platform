@@ -141,8 +141,10 @@ func openDBRo(cfg *config.Config) *pgxpool.Pool {
 		logger.Errorf("Unable to connect to database: %v\n", err)
 		os.Exit(1)
 	}
-	if con.MinConns < 4 {
-		con.MinConns = 4
+	if con.MaxConns > 2 {
+		if con.MinConns < con.MaxConns-1 {
+			con.MinConns = con.MaxConns - 1
+		}
 	}
 	con.AfterConnect = func(ctx context.Context, conn *pgx.Conn) error {
 		// do something with every new connection
