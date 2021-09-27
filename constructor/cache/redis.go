@@ -235,3 +235,103 @@ func keyArrayOfFScreenMain(pollId int64) string {
 func keyInvalidateArrayOfFScreenMain(pollItemId int64) string {
 	return fmt.Sprintf("InvalidateArrayOfFScreenMain-pollItemId-%d", pollItemId)
 }
+
+func (r *Redis) PutArrayOfFScreenWelcome(pollId int64, a []domain.FScreenWelcome) {
+	result, err := json.Marshal(a)
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	key := keyArrayOfFScreenWelcome(pollId)
+	err = r.Cache.Set(ctx, key, result, redis.KeepTTL).Err()
+	if err != nil {
+		logger.Errorf("cache.PutArrayOfFScreenWelcome: %v", err)
+		return
+	}
+	value := key
+	for _, e := range a {
+		key = keyInvalidateArrayOfFScreenWelcome(e.PollItem.Id)
+		logger.Infof("cache.PutArrayOfFScreenWelcome: key %s", key)
+		err = r.Cache.Set(ctx, key, value, redis.KeepTTL).Err()
+		if err != nil {
+			logger.Errorf("cache.PutArrayOfFScreenWelcome: %v", err)
+			return
+		}
+	}
+}
+
+func (r *Redis) GetArrayOfFScreenWelcome(pollId int64) ([]domain.FScreenWelcome, error) {
+	key := keyArrayOfFScreenWelcome(pollId)
+	cmd := r.Cache.Get(ctx, key)
+	if cmd != nil && cmd.Err() != nil {
+		logger.Errorf("cache.GetArrayOfFScreenWelcome: pollId: %s %v", pollId, cmd.Err())
+		return nil, cmd.Err()
+	} else {
+		s := cmd.Val()
+		var a []domain.FScreenWelcome
+		err := json.Unmarshal([]byte(s), &a)
+		if err != nil {
+			logger.Error(err)
+			return nil, err
+		}
+		return a, nil
+	}
+}
+
+func keyArrayOfFScreenWelcome(pollId int64) string {
+	return fmt.Sprintf("ArrayOfFScreenWelcome-%d", pollId)
+}
+
+func keyInvalidateArrayOfFScreenWelcome(pollItemId int64) string {
+	return fmt.Sprintf("InvalidateArrayOfFScreenWelcome-pollItemId-%d", pollItemId)
+}
+
+func (r *Redis) PutArrayOfFScreenComplete(pollId int64, a []domain.FScreenComplete) {
+	result, err := json.Marshal(a)
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	key := keyArrayOfFScreenComplete(pollId)
+	err = r.Cache.Set(ctx, key, result, redis.KeepTTL).Err()
+	if err != nil {
+		logger.Errorf("cache.PutArrayOfFScreenWelcome: %v", err)
+		return
+	}
+	value := key
+	for _, e := range a {
+		key = keyInvalidateArrayOfFScreenComplete(e.PollItem.Id)
+		logger.Infof("cache.PutArrayOfFScreenWelcome: key %s", key)
+		err = r.Cache.Set(ctx, key, value, redis.KeepTTL).Err()
+		if err != nil {
+			logger.Errorf("cache.PutArrayOfFScreenWelcome: %v", err)
+			return
+		}
+	}
+}
+
+func (r *Redis) GetArrayOfFScreenComplete(pollId int64) ([]domain.FScreenComplete, error) {
+	key := keyArrayOfFScreenComplete(pollId)
+	cmd := r.Cache.Get(ctx, key)
+	if cmd != nil && cmd.Err() != nil {
+		logger.Errorf("cache.GetArrayOfFScreenWelcome: pollId: %s %v", pollId, cmd.Err())
+		return nil, cmd.Err()
+	} else {
+		s := cmd.Val()
+		var a []domain.FScreenComplete
+		err := json.Unmarshal([]byte(s), &a)
+		if err != nil {
+			logger.Error(err)
+			return nil, err
+		}
+		return a, nil
+	}
+}
+
+func keyArrayOfFScreenComplete(pollId int64) string {
+	return fmt.Sprintf("ArrayOfFScreenComplete-%d", pollId)
+}
+
+func keyInvalidateArrayOfFScreenComplete(pollItemId int64) string {
+	return fmt.Sprintf("InvalidateArrayOfFScreenComplete-pollItemId-%d", pollItemId)
+}

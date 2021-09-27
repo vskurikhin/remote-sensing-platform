@@ -51,11 +51,22 @@ func (h *Handlers) getPollConstructorPageData(ctx *sa.RequestCtx) (*dto.Construc
 		return nil, err
 	}
 
-	pollItems, err := h.getAllFPollItemByPollIdAndDeletedAtIsNullOrderByIndexWithLocalIndex(id)
+	screenMain, err := h.getAllFScreenMainByPollIdAndDeletedAtIsNullOrderByIndexWithLocalIndex(id)
 	if err != nil {
 		return nil, err
 	}
-	constructorResponse := dto.NewConstructorResponse(poll, design, settings, channels, pollItems)
+
+	screenWelcome, err := h.getAllFScreenWelcomeByPollIdAndDeletedAtIsNullOrderByIndexWithLocalIndex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	screenComplete, err := h.getAllFScreenCompleteByPollIdAndDeletedAtIsNullOrderByIndexWithLocalIndex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	constructorResponse := dto.NewConstructorResponse(poll, design, settings, channels, screenMain, screenWelcome, screenComplete)
 
 	return constructorResponse, nil
 }
@@ -108,14 +119,38 @@ func (h *Handlers) getAllEPollChannelsByPollIdAndDebugFalseOrderByIdAsc(id int64
 	return channels, nil
 }
 
-func (h *Handlers) getAllFPollItemByPollIdAndDeletedAtIsNullOrderByIndexWithLocalIndex(id int64) ([]domain.FScreenMain, error) {
-	pollItems, err := h.Server.Cache.GetArrayOfFScreenMain(id)
-	if err != nil {
-		pollItems, err := h.Server.Dao.FPollItem.FindById(id)
+func (h *Handlers) getAllFScreenMainByPollIdAndDeletedAtIsNullOrderByIndexWithLocalIndex(id int64) ([]domain.FScreenMain, error) {
+	screenMain, err := h.Server.Cache.GetArrayOfFScreenMain(id)
+	if screenMain == nil || err != nil {
+		screenMain, err = h.Server.Dao.FScreenMain.FindById(id)
 		if err != nil {
 			return nil, err
 		}
-		h.Server.Cache.PutArrayOfFScreenMain(id, pollItems)
+		h.Server.Cache.PutArrayOfFScreenMain(id, screenMain)
 	}
-	return pollItems, nil
+	return screenMain, nil
+}
+
+func (h *Handlers) getAllFScreenWelcomeByPollIdAndDeletedAtIsNullOrderByIndexWithLocalIndex(id int64) ([]domain.FScreenWelcome, error) {
+	screenWelcome, err := h.Server.Cache.GetArrayOfFScreenWelcome(id)
+	if screenWelcome == nil || err != nil {
+		screenWelcome, err = h.Server.Dao.FScreenWelcome.FindById(id)
+		if err != nil {
+			return nil, err
+		}
+		h.Server.Cache.PutArrayOfFScreenWelcome(id, screenWelcome)
+	}
+	return screenWelcome, nil
+}
+
+func (h *Handlers) getAllFScreenCompleteByPollIdAndDeletedAtIsNullOrderByIndexWithLocalIndex(id int64) ([]domain.FScreenComplete, error) {
+	screenComplete, err := h.Server.Cache.GetArrayOfFScreenComplete(id)
+	if screenComplete == nil || err != nil {
+		screenComplete, err = h.Server.Dao.FScreenComplete.FindById(id)
+		if err != nil {
+			return nil, err
+		}
+		h.Server.Cache.PutArrayOfFScreenComplete(id, screenComplete)
+	}
+	return screenComplete, nil
 }

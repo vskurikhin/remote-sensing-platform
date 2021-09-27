@@ -5,9 +5,7 @@ math.random(); math.random(); math.random()
 token = 'OTIwNjgwYjUtNmY5OC00NmYyLTk3NDQtNzEzNjY3MzkzM2Ji'
 
 request = function()
-  path = "/api/admin/1/polls/13901/constructor"
-  -- Return the request object with the current URL path
-  --  wrk.body = '{"Message": "test' .. math.random(9999999) .. '", "ToUser": "' .. username .. '"}'
+  path = "/api/admin/1/polls/1/constructor"
   return wrk.format(
           'GET',
           path,

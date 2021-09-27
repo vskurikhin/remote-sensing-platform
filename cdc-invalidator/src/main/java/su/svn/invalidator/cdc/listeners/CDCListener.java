@@ -15,8 +15,11 @@ import org.apache.kafka.connect.source.SourceRecord;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.nio.ByteBuffer;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 
 @Slf4j
 @Component
@@ -118,6 +121,17 @@ public class CDCListener {
                 extracted(sourceRecordValue);
         }
         log.info("handleEvent: {}", sourceRecordValue);
+        ConcurrentHashMap<Long, AtomicBoolean> map = new ConcurrentHashMap<>();
+        map.forEach(new BiConsumer<Long, AtomicBoolean>() {
+            @Override
+            public void accept(Long aLong, AtomicBoolean atomicBoolean) {
+            }
+        });
+        AtomicBoolean b = new AtomicBoolean();
+        if (b.compareAndSet(true, false)) {
+            // TODO update
+        }
+        b.set(true);
     }
 
     private void extracted(Struct sourceRecordValue) {

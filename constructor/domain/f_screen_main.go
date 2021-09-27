@@ -44,7 +44,7 @@ func (e *FScreenMain) Marshal() []byte {
 	return result
 }
 
-func (d *fPollItem) FindById(id int64) ([]FScreenMain, error) {
+func (d *fScreenMain) FindById(id int64) ([]FScreenMain, error) {
 	return d.findById(id)
 }
 
@@ -203,13 +203,12 @@ SELECT pi.id,
       ('AGREEMENT', 'AUDIO', 'CARD_SORTING', 'CLOSED', 'COMPARISON', 'CSI', 'FILE', 'FIRST_CLICK', 'KANO',
        'LINKED_LIST', 'MATRIX', 'MEDIA', 'NPS', 'OPENED', 'OPINION', 'PASSWORD', 'RANGING', 'RATING',
        'SEMANTIC_DIFFERENTIAL', 'SITE_TEST', 'SLIDESHOW', 'TEST_TEXT', 'TEXT', 'TREE_TESTING', 'GROUP')
-   AND (pi.deleted_at IS NULL)
    AND pi.poll_id = $1
    AND (pi.deleted_at IS NULL)
  ORDER BY sm.index ASC
 `
 
-func (d *fPollItem) findById(id int64) ([]FScreenMain, error) {
+func (d *fScreenMain) findById(id int64) ([]FScreenMain, error) {
 	var list []FScreenMain
 	rows, err := d.poolRo.Query(context.Background(), SELECT_POLL_ITEM_BY_ID, id)
 	if err != nil {
