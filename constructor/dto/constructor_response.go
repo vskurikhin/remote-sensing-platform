@@ -7,10 +7,12 @@ import (
 )
 
 type ConstructorResponse struct {
-	Poll          *domain.EPoll          `json:"poll"`
-	Settings      *PollDesignAndSettings `json:"settings"`
-	PollChannels  []domain.EPollChannel  `json:"pollChannels"`
-	MainPollItems []domain.FScreenMain   `json:"main_poll_items"`
+	Poll           *domain.EPoll            `json:"poll"`
+	Settings       *PollDesignAndSettings   `json:"settings"`
+	PollChannels   []domain.EPollChannel    `json:"pollChannels"`
+	ScreenMains    []domain.FScreenMain     `json:"screen_main"`
+	ScreenWelcome  []domain.FScreenWelcome  `json:"screen_welcome"`
+	ScreenComplete []domain.FScreenComplete `json:"screen_complete"`
 }
 
 func NewConstructorResponse(
@@ -18,13 +20,17 @@ func NewConstructorResponse(
 	design *domain.EPollDesign,
 	settings *domain.EPollSettings,
 	channels []domain.EPollChannel,
-	items []domain.FScreenMain) *ConstructorResponse {
+	screenMain []domain.FScreenMain,
+	screenWelcome []domain.FScreenWelcome,
+	screenComplete []domain.FScreenComplete) *ConstructorResponse {
 
 	return &ConstructorResponse{
-		Poll:          poll,
-		Settings:      NewPollDesignAndSettings(design, settings),
-		PollChannels:  channels,
-		MainPollItems: items,
+		Poll:           poll,
+		Settings:       NewPollDesignAndSettings(design, settings),
+		PollChannels:   channels,
+		ScreenMains:    screenMain,
+		ScreenWelcome:  screenWelcome,
+		ScreenComplete: screenComplete,
 	}
 }
 

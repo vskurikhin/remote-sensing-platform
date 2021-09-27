@@ -6,11 +6,13 @@ import (
 
 type (
 	DAO struct {
-		EPoll         *ePoll
-		EPollChannel  *ePollChannel
-		EPollDesign   *ePollDesign
-		EPollSettings *ePollSettings
-		FPollItem     *fPollItem
+		EPoll           *ePoll
+		EPollChannel    *ePollChannel
+		EPollDesign     *ePollDesign
+		EPollSettings   *ePollSettings
+		FScreenMain     *fScreenMain
+		FScreenWelcome  *fScreenWelcome
+		FScreenComplete *fScreenComplete
 	}
 	ePoll struct {
 		poolRo *pgxpool.Pool
@@ -28,7 +30,15 @@ type (
 		poolRo *pgxpool.Pool
 		poolRw *pgxpool.Pool
 	}
-	fPollItem struct {
+	fScreenMain struct {
+		poolRo *pgxpool.Pool
+		poolRw *pgxpool.Pool
+	}
+	fScreenWelcome struct {
+		poolRo *pgxpool.Pool
+		poolRw *pgxpool.Pool
+	}
+	fScreenComplete struct {
 		poolRo *pgxpool.Pool
 		poolRw *pgxpool.Pool
 	}
@@ -36,10 +46,12 @@ type (
 
 func New(poolRo *pgxpool.Pool, poolRw *pgxpool.Pool) *DAO {
 	return &DAO{
-		EPoll:         &ePoll{poolRo: poolRo, poolRw: poolRw},
-		EPollChannel:  &ePollChannel{poolRo: poolRo, poolRw: poolRw},
-		EPollDesign:   &ePollDesign{poolRo: poolRo, poolRw: poolRw},
-		EPollSettings: &ePollSettings{poolRo: poolRo, poolRw: poolRw},
-		FPollItem:     &fPollItem{poolRo: poolRo, poolRw: poolRw},
+		EPoll:           &ePoll{poolRo: poolRo, poolRw: poolRw},
+		EPollChannel:    &ePollChannel{poolRo: poolRo, poolRw: poolRw},
+		EPollDesign:     &ePollDesign{poolRo: poolRo, poolRw: poolRw},
+		EPollSettings:   &ePollSettings{poolRo: poolRo, poolRw: poolRw},
+		FScreenMain:     &fScreenMain{poolRo: poolRo, poolRw: poolRw},
+		FScreenWelcome:  &fScreenWelcome{poolRo: poolRo, poolRw: poolRw},
+		FScreenComplete: &fScreenComplete{poolRo: poolRo, poolRw: poolRw},
 	}
 }
