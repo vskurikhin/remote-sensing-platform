@@ -121,17 +121,6 @@ public class CDCListener {
                 extracted(sourceRecordValue);
         }
         log.info("handleEvent: {}", sourceRecordValue);
-        ConcurrentHashMap<Long, AtomicBoolean> map = new ConcurrentHashMap<>();
-        map.forEach(new BiConsumer<Long, AtomicBoolean>() {
-            @Override
-            public void accept(Long aLong, AtomicBoolean atomicBoolean) {
-            }
-        });
-        AtomicBoolean b = new AtomicBoolean();
-        if (b.compareAndSet(true, false)) {
-            // TODO update
-        }
-        b.set(true);
     }
 
     private void extracted(Struct sourceRecordValue) {
